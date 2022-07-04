@@ -2,10 +2,12 @@ package util;
 
 import domain.Person;
 
+import java.util.Hashtable;
 import java.util.List;
 
 public final class SearchUtils {
-    private SearchUtils() {}
+    private SearchUtils() {
+    }
 
     public static int linearSearch(List<Person> people, List<Person> toFind) {
         int count = 0;
@@ -87,4 +89,15 @@ public final class SearchUtils {
         }
         return count;
     }
+
+    public static int searchInHashTable(Hashtable<String, Integer> hashtable, List<Person> toFind) {
+        int count = 0;
+        for (Person person : toFind) {
+            if (hashtable.containsKey(person.getName())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

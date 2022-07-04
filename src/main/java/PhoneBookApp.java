@@ -1,4 +1,5 @@
 import domain.Person;
+import util.HashTable;
 import util.SearchUtils;
 import util.SortUtils;
 import util.Timer;
@@ -6,14 +7,13 @@ import util.Timer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
 
 public class PhoneBookApp {
-    private final String DIRECTORY_PATH = "C:\\Users\\beeav\\IdeaProjects\\project\\phone_book\\src\\main\\java\\data\\directory.txt";
-    private final String FIND_PATH = "C:\\Users\\beeav\\IdeaProjects\\project\\phone_book\\src\\main\\java\\data\\find.txt";
-    private final String TEST1 = "C:\\Users\\beeav\\IdeaProjects\\project\\phone_book\\src\\main\\java\\data\\test1.txt";
-    private final String TEST2 = "C:\\Users\\beeav\\IdeaProjects\\project\\phone_book\\src\\main\\java\\data\\test2.txt";
+    private final String DIRECTORY_PATH = "C:\\Users\\beeav\\IdeaProjects\\project\\phone-book\\src\\main\\java\\data\\directory.txt";
+    private final String FIND_PATH = "C:\\Users\\beeav\\IdeaProjects\\project\\phone-book\\src\\main\\java\\data\\find.txt";
 
     public void run() throws FileNotFoundException {
         List<Person> directory = fromFile(DIRECTORY_PATH);
@@ -62,6 +62,19 @@ public class PhoneBookApp {
         timer.printInfo(String.format("Found %d/%d entries.", found, find.size()), quickSortTime + binarySearchTime);
         System.out.println("Sorting time:" + timer.getTimeLapseAsString(quickSortTime));
         System.out.println("Searching time: " + timer.getTimeLapseAsString(binarySearchTime));
+
+        System.out.println("\nStart searching (hash table)...");
+        timer.start();
+        Hashtable<String, Integer> hashtable = HashTable.createHashTable(directory);
+        timer.stop();
+        long creatingHashTable = timer.getTimeLapse();
+        timer.start();
+        found = SearchUtils.searchInHashTable(hashtable, find);
+        timer.stop();
+        long searchTimeInHashTable = timer.getTimeLapse();
+        timer.printInfo(String.format("Found %d/%d entries.", found, find.size()), creatingHashTable + searchTimeInHashTable);
+        System.out.println("Creating time: " + timer.getTimeLapseAsString(creatingHashTable));
+        System.out.println("Searching time: +" + timer.getTimeLapseAsString(searchTimeInHashTable));
     }
 
     private List<Person> fromFile(String path) throws FileNotFoundException {
